@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <title>GPS AR + UI画面</title>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/ar.js@3.4.2/aframe/build/aframe-ar-nft.js"></script>
+    <!-- ✅ GPS対応のAR.jsビルド -->
+    <script src="https://cdn.jsdelivr.net/npm/ar.js@3.4.2/aframe/build/aframe-ar.js"></script>
     <style>
       body, html {
         margin: 0;
@@ -30,7 +31,7 @@
     </style>
   </head>
   <body>
-    <!-- 🔼 上半分：GPS AR表示 -->
+    <!-- 🔼 AR表示 -->
     <div id="ar-container">
       <a-scene
         embedded
@@ -39,9 +40,9 @@
         arjs="sourceType: webcam; debugUIEnabled: false; gpsMinAccuracy: 100;"
         style="height: 100%; width: 100%;">
 
-        <!-- GPS位置にオブジェクトを表示 -->
+        <!-- 🔴 GPSで表示されるARオブジェクト -->
         <a-entity
-          gps-entity-place="latitude: 35.69325706271667; longitude: 140.0507750179934;"
+          gps-entity-place="latitude: 35.6586; longitude: 139.7454;"
           look-at="[gps-camera]"
           geometry="primitive: box"
           material="color: red;"
@@ -52,11 +53,21 @@
       </a-scene>
     </div>
 
-    <!-- 🔽 下半分：説明・ボタンなどのUI -->
+    <!-- 🔽 UI -->
     <div id="ui-container">
       <h2>案内情報</h2>
       <p>このARオブジェクトは東京タワー付近にあります。</p>
       <button onclick="alert('次のスポットへ')">次へ進む</button>
+      <p id="debug" style="font-size: 0.9em; color: gray;"></p>
     </div>
+
+    <script>
+      // GPS位置のデバッグ表示
+      document.addEventListener("gps-camera-update-position", (e) => {
+        const pos = e.detail.position;
+        document.getElementById("debug").innerText =
+          `現在地: 緯度 ${pos.latitude}, 経度 ${pos.longitude}, 精度 ±${pos.accuracy}m`;
+      });
+    </script>
   </body>
 </html>
