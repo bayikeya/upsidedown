@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>GPS AR + UI画面</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ar.js@3.4.2/aframe/build/aframe-ar-nft.js"></script>
+    <style>
+      body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      #ar-container {
+        height: 50%;
+        width: 100%;
+        position: relative;
+      }
+
+      #ui-container {
+        height: 50%;
+        width: 100%;
+        background: white;
+        overflow: auto;
+        padding: 10px;
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 🔼 上半分：GPS AR表示 -->
+    <div id="ar-container">
+      <a-scene
+        embedded
+        vr-mode-ui="enabled: false"
+        renderer="logarithmicDepthBuffer: true;"
+        arjs="sourceType: webcam; debugUIEnabled: false; gpsMinAccuracy: 100;"
+        style="height: 100%; width: 100%;">
+
+        <!-- GPS位置にオブジェクトを表示 -->
+        <a-entity
+          gps-entity-place="latitude: 35.6586; longitude: 139.7454;"
+          look-at="[gps-camera]"
+          geometry="primitive: box"
+          material="color: red;"
+          scale="5 5 5">
+        </a-entity>
+
+        <a-camera gps-camera rotation-reader></a-camera>
+      </a-scene>
+    </div>
+
+    <!-- 🔽 下半分：説明・ボタンなどのUI -->
+    <div id="ui-container">
+      <h2>案内情報</h2>
+      <p>このARオブジェクトは東京タワー付近にあります。</p>
+      <button onclick="alert('次のスポットへ')">次へ進む</button>
+    </div>
+  </body>
+</html>
