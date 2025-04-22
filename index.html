@@ -3,9 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>GPS AR + UI画面</title>
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <!-- ✅ GPS機能付きのAR.js -->
-    <script src="https://cdn.jsdelivr.net/npm/ar.js@3.4.2/aframe/build/aframe-ar.js"></script>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ar.js@3.4.2/aframe/build/aframe-ar-nft.js"></script>
     <style>
       body, html {
         margin: 0;
@@ -31,7 +30,7 @@
     </style>
   </head>
   <body>
-    <!-- 🔼 AR表示（GPS） -->
+    <!-- 🔼 上半分：GPS AR表示 -->
     <div id="ar-container">
       <a-scene
         embedded
@@ -40,45 +39,24 @@
         arjs="sourceType: webcam; debugUIEnabled: false; gpsMinAccuracy: 100;"
         style="height: 100%; width: 100%;">
 
-        <!-- 📍 現在地から東に10mのオブジェクト -->
+        <!-- GPS位置にオブジェクトを表示 -->
         <a-entity
-          id="dynamic-box"
-          gps-entity-place="latitude: 35.69327519637889; longitude: 140.05075269007932;"
+          gps-entity-place="latitude: 35.6586; longitude: 139.7454;"
           look-at="[gps-camera]"
           geometry="primitive: box"
           material="color: red;"
-          scale="10 10 10">
+          scale="5 5 5">
         </a-entity>
 
         <a-camera gps-camera rotation-reader></a-camera>
       </a-scene>
     </div>
 
-    <!-- 🔽 UI部分 -->
+    <!-- 🔽 下半分：説明・ボタンなどのUI -->
     <div id="ui-container">
       <h2>案内情報</h2>
-      <p>赤いARボックスは、現在地の約10m東に表示されます。</p>
+      <p>このARオブジェクトは東京タワー付近にあります。</p>
       <button onclick="alert('次のスポットへ')">次へ進む</button>
-      <p id="debug" style="font-size: 0.9em; color: gray;"></p>
     </div>
-
-    <!-- 🔧 GPS更新処理 + デバッグ表示 -->
-    <script>
-      document.addEventListener("gps-camera-update-position", (e) => {
-        const lat = e.detail.position.latitude;
-        const lon = e.detail.position.longitude;
-        const acc = e.detail.position.accuracy;
-
-        // デバッグ表示
-        document.getElementById("debug").innerText =
-          `現在地: 緯度 ${lat.toFixed(6)}, 経度 ${lon.toFixed(6)}, 精度 ±${acc}m`;
-
-        // 東に約10mオフセット（経度方向へ0.0001）
-        const adjustedLon = lon + 0.0001;
-
-        const box = document.getElementById("dynamic-box");
-        box.setAttribute("gps-entity-place", `latitude: ${lat}; longitude: ${adjustedLon}`);
-      });
-    </script>
   </body>
 </html>
